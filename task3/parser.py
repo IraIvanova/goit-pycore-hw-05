@@ -10,6 +10,7 @@ def load_logs(file_path: str) -> list:
         with open(file_path, "r") as fh:
             return list(filter(lambda l: l, [parse_log_line(line) for line in fh]))
     except FileNotFoundError:
+        print(f"File not found: {file_path}")
         return []
     except OSError as e:
         print(f"Cannot read file: {e}")
@@ -34,6 +35,9 @@ def count_logs_by_level(logs: list) -> dict:
     return dict(collections.Counter(log['level'] for log in logs))
 
 def display_log_counts(counts: dict):
+    if not counts:
+        return
+
     separator = ' | '
     headers = ['Рівень логування', 'Кількість']
     column_lengths = [16, 9]
@@ -65,7 +69,7 @@ def main():
     e_level = sys.argv[2] if len(sys.argv) > 2 else None
 
     if not log_file:
-        print("Usage: python main.py <log_file> [LEVEL]")
+        print("Usage: python parser.py <log_file> [LEVEL]")
         sys.exit(1)
 
     if e_level and e_level.upper() not in ERROR_LEVELS:
