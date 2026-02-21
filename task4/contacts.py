@@ -1,27 +1,22 @@
-def add_contact(args, contacts):
-    if len(args) < 2:
-        return "Please, provide both name and phone number."
+from errors_handler import input_error
 
+@input_error
+def add_contact(args, contacts):
     name, phone = args
     contacts[name] = phone
 
     return "Contact added."
 
+@input_error
 def change_contact(args, contacts):
-    if len(args) < 2:
-        return "Please, provide both name and phone number."
-
     name, phone = args
-
-    if not check_if_contact_exists(name, contacts):
-        return "Contact not found."
-
     contacts[name] = phone
+
     return "Contact changed."
 
-def show_phone(name, contacts):
-    if not check_if_contact_exists(name, contacts):
-        return "Contact not found."
+@input_error
+def show_phone(args, contacts):
+    name = args[0]
 
     return contacts[name]
 
@@ -29,12 +24,4 @@ def show_all(contacts):
     if not contacts:
         return "No contacts saved."
 
-    result = ""
-    for name, phone in contacts.items():
-        result += f"{name}: {phone}\n"
-
-    return result
-
-
-def check_if_contact_exists(name, contacts):
-    return name in contacts
+    return "".join(f"{name}: {phone}\n" for name, phone in contacts.items())
